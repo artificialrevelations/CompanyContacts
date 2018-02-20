@@ -1,12 +1,17 @@
 package com.alexzh.company.contacts.teams
 
 import android.arch.lifecycle.ViewModel
+import com.alexzh.company.contacts.SchedulersProvider
 import com.alexzh.company.contacts.data.Team
 import com.alexzh.company.contacts.data.source.TeamRepository
+import io.reactivex.Single
 
-class TeamsViewModel(private val teamRepository: TeamRepository): ViewModel() {
+class TeamsViewModel(private val teamRepository: TeamRepository,
+                     private val schedulersProvider: SchedulersProvider): ViewModel() {
 
-    fun fetchTeams(): List<Team> {
+    fun fetchTeams(): Single<List<Team>> {
         return teamRepository.fetchTeams()
+                .subscribeOn(schedulersProvider.io())
+                .observeOn(schedulersProvider.ui())
     }
 }
