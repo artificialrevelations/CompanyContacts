@@ -1,8 +1,10 @@
 package com.alexzh.company.contacts
 
+import android.content.Context
 import com.alexzh.company.contacts.data.source.TeamDataRepository
 import com.alexzh.company.contacts.data.source.TeamDataSource
 import com.alexzh.company.contacts.data.source.TeamRepository
+import com.alexzh.company.contacts.data.source.local.ContactsDatabase
 import com.alexzh.company.contacts.data.source.local.LocalTeamDataSource
 import com.alexzh.company.contacts.data.source.remote.ContactsApiService
 import com.alexzh.company.contacts.data.source.remote.RemoteTeamDataSource
@@ -18,27 +20,31 @@ object Injection {
         fun provideAppSchedulersProvider(): SchedulersProvider {
             return AppSchedulersProvider()
         }
+
+        fun provideDatabase(context: Context): ContactsDatabase {
+            return ContactsDatabase.getInstance(context)
+        }
     }
 
     internal object Teams {
-        fun provideTeamsViewModel(): TeamsViewModel {
-            return TeamsViewModel(Data.provideTeamDataRepository(), App.provideAppSchedulersProvider())
+        fun provideTeamsViewModel(context: Context): TeamsViewModel {
+            return TeamsViewModel(Data.provideTeamDataRepository(context), App.provideAppSchedulersProvider())
         }
     }
 
     internal object Data {
 
-        private fun provideLocalTeamsDataSource(): TeamDataSource {
-            return LocalTeamDataSource()
+        private fun provideLocalTeamsDataSource(context: Context): TeamDataSource {
+            return LocalTeamDataSource(App.provideDatabase(context))
         }
 
         private fun provideRemoteTeamsDataSource(): TeamDataSource {
             return RemoteTeamDataSource(Api.provideContactApiService())
         }
 
-        fun provideTeamDataRepository(): TeamRepository {
+        fun provideTeamDataRepository(context: Context): TeamRepository {
             return TeamDataRepository(
-                    provideLocalTeamsDataSource(),
+                    provideLocalTeamsDataSource(context),
                     provideRemoteTeamsDataSource())
         }
     }

@@ -21,7 +21,7 @@ class TeamsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         viewModel = ViewModelProviders
-                .of(this, ViewModelFactory(Injection.Teams.provideTeamsViewModel()))
+                .of(this, ViewModelFactory(Injection.Teams.provideTeamsViewModel(applicationContext)))
                 .get(TeamsViewModel::class.java)
 
         teamsRecyclerView.layoutManager = LinearLayoutManager(this)

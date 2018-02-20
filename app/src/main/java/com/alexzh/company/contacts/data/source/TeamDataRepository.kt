@@ -14,7 +14,7 @@ class TeamDataRepository(private val localDataSource: TeamDataSource,
     }
 
     override fun saveTeams(teams: List<Team>): Completable {
-        return Completable.complete()
+        return localDataSource.saveTeams(teams)
     }
 
     private fun fetchLocalTeams(): Single<List<Team>> {
