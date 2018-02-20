@@ -8,10 +8,9 @@ class TeamDataRepository(private val localDataSource: TeamDataSource,
                          private val remoteDataSource: TeamDataSource): TeamRepository {
 
     override fun fetchTeams(): Single<List<Team>> {
-//        return Single.concat(fetchLocalTeams(), fetchAndCacheRemoteTeams())
-//                .filter { teams -> teams.isNotEmpty() }
-//                .first(listOf())
-        return fetchAndCacheRemoteTeams()
+        return Single.concat(fetchLocalTeams(), fetchAndCacheRemoteTeams())
+                .filter { teams -> teams.isNotEmpty() }
+                .first(listOf())
     }
 
     override fun saveTeams(teams: List<Team>): Completable {
@@ -24,6 +23,6 @@ class TeamDataRepository(private val localDataSource: TeamDataSource,
 
     private fun fetchAndCacheRemoteTeams(): Single<List<Team>> {
         return remoteDataSource.fetchTeams()
-//                .doOnSuccess { saveTeams(it) }
+                .doOnSuccess { saveTeams(it) }
     }
 }
