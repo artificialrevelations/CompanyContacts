@@ -1,6 +1,7 @@
 package com.alexzh.company.contacts.teams
 
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -9,6 +10,7 @@ import com.alexzh.company.contacts.Injection
 import com.alexzh.company.contacts.R
 import com.alexzh.company.contacts.ViewModelFactory
 import com.alexzh.company.contacts.data.Team
+import com.alexzh.company.contacts.employees.EmployeesActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class TeamsActivity : AppCompatActivity() {
@@ -29,7 +31,10 @@ class TeamsActivity : AppCompatActivity() {
     }
 
     private fun launch(team: Team) {
-        Toast.makeText(this, "$team", Toast.LENGTH_SHORT).show()
+//        Toast.makeText(this, "$team", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, EmployeesActivity::class.java)
+        intent.putExtra(EmployeesActivity.TEAM_ID, team.id)
+        startActivity(intent)
     }
 
     override fun onResume() {
