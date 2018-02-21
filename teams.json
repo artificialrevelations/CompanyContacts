@@ -1,1 +1,18 @@
-[{"id":1,"name":"Andromeda"},{"id":2,"name":"Coma Berenices"},{"id":3,"name":"Ursa Major"},{"id":4,"name":"Sculptor"}]
+[
+  {
+    "id": 1,
+    "name": "Andromeda"
+  },
+  {
+    "id": 2,
+    "name": "Coma Berenices"
+  },
+  {
+    "id": 3,
+    "name": "Ursa Major"
+  },
+  {
+    "id": 4,
+    "name": "Sculptor"
+  }
+]
