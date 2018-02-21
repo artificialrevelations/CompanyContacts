@@ -4,12 +4,15 @@ import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
+import com.alexzh.company.contacts.data.Employee
 import com.alexzh.company.contacts.data.Team
 
-@Database(entities = [(Team::class)], version = 1)
+@Database(entities = [Team::class, Employee::class], version = 1)
 abstract class ContactsDatabase: RoomDatabase() {
 
     abstract fun teamsDao(): TeamsDAO
+
+    abstract fun employeesDao(): EmployeesDAO
 
     companion object {
         private const val DATABASE_NAME = "contacts.db"
