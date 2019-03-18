@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CompanyContacts</string>
+
+    <string name="error_message">Error: %s</string>
 </resources>

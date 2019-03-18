@@ -1,7 +1,6 @@
 package com.alexzh.company.contacts.teams
 
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -11,12 +10,16 @@ import com.alexzh.company.contacts.R
 import com.alexzh.company.contacts.ViewModelFactory
 import com.alexzh.company.contacts.data.Team
 import com.alexzh.company.contacts.employees.EmployeesActivity
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 
 class TeamsActivity : AppCompatActivity() {
 
     private lateinit var viewModel: TeamsViewModel
-    private val teamsAdapter: TeamsAdapter by lazy { TeamsAdapter(itemClick = { launch(it) }) }
+    private val disposable = CompositeDisposable()
+    private val teamsAdapter: TeamsAdapter by lazy {
+        TeamsAdapter(itemClick = { EmployeesActivity.start(this, it)})
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,22 +33,25 @@ class TeamsActivity : AppCompatActivity() {
         teamsRecyclerView.adapter = teamsAdapter
     }
 
-    private fun launch(team: Team) {
-//        Toast.makeText(this, "$team", Toast.LENGTH_SHORT).show()
-        val intent = Intent(this, EmployeesActivity::class.java)
-        intent.putExtra(EmployeesActivity.TEAM_ID, team.id)
-        startActivity(intent)
+    override fun onStart() {
+        super.onStart()
+        disposable.add(
+                viewModel.fetchTeams()
+                    .subscribe(::showTeams, ::showError)
+        )
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.fetchTeams()
-                .subscribe({
-                   teamsAdapter.setTeamList(it)
-                }, {
-                    it.printStackTrace()
-                    Toast.makeText(this, "Error: ${it.cause}", Toast.LENGTH_LONG).show()
-                })
+    private fun showTeams(teams: List<Team>) {
+        teamsAdapter.setTeamList(teams)
+    }
 
+    private fun showError(error: Throwable) {
+        error.printStackTrace()
+        Toast.makeText(this, getString(R.string.error_message, error.cause), Toast.LENGTH_LONG).show()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        disposable.dispose()
     }
 }
