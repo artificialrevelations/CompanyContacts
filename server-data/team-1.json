@@ -3,30 +3,35 @@
     "teamId": "1",
     "name": "Sofia Hamilton",
     "photo": "https://randomuser.me/api/portraits/women/83.jpg",
+    "position": "Scrum Master",
     "phone": "(343)-361-4436"
   },
   {
     "teamId": "1",
     "name": "Craig Medina",
     "photo": "https://randomuser.me/api/portraits/men/83.jpg",
+    "position": "UI/UX Designer",
     "phone": "(958)-887-7946"
   },
   {
     "teamId": "1",
     "name": "Albert Boyd",
     "photo": "https://randomuser.me/api/portraits/men/29.jpg",
+    "position": "Software Engineer",
     "phone": "(798)-601-1026"
   },
   {
     "teamId": "1",
     "name": "Teresa Hayes",
     "photo": "https://randomuser.me/api/portraits/women/69.jpg",
+    "position": "Software Engineer",
     "phone": "(335)-345-9173"
   },
   {
     "teamId": "1",
     "name": "Ray Chavez",
     "photo": "https://randomuser.me/api/portraits/men/18.jpg",
+    "position": "Software Engineer",
     "phone": "(254)-301-4379"
   }
 ]
