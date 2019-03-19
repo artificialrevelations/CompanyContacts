@@ -1,0 +1,37 @@
+[
+  {
+    "teamId": "2",
+    "name": "Anne Matthews",
+    "photo": "https://randomuser.me/api/portraits/women/46.jpg",
+    "position": "UI/UX Designer",
+    "phone": "(168)-105-8857"
+  },
+  {
+    "teamId": "2",
+    "name": "Craig West",
+    "photo": "https://randomuser.me/api/portraits/men/92.jpg",
+    "position": "Scrum Master",
+    "phone": "(947)-342-1402"
+  },
+  {
+    "teamId": "2",
+    "name": "Larry Bryant",
+    "photo": "https://randomuser.me/api/portraits/men/78.jpg",
+    "position": "Software Engineer",
+    "phone": "(996)-869-3181"
+  },
+  {
+    "teamId": "2",
+    "name": "Adam Duncan",
+    "photo": "https://randomuser.me/api/portraits/men/36.jpg",
+    "position": "Software Engineer",
+    "phone": "(589)-606-7923"
+  },
+  {
+    "teamId": "2",
+    "name": "Ann Davis",
+    "photo": "https://randomuser.me/api/portraits/women/68.jpg",
+    "position": "Software Engineer",
+    "phone": "(510)-139-8931"
+  }
+]

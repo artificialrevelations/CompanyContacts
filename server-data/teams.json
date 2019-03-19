@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "name": "Andromeda",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1024px-Andromeda_Galaxy_%28with_h-alpha%29.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Coma Berenices",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Needle_Galaxy_4565.jpeg/952px-Needle_Galaxy_4565.jpeg"
+  },
+  {
+    "id": 3,
+    "name": "Ursa Major",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/M81.jpg/901px-M81.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Sculptor",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Sculptor_Dwarf_Galaxy_ESO.jpg/656px-Sculptor_Dwarf_Galaxy_ESO.jpg"
+  }
+]

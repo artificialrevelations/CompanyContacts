@@ -1,0 +1,37 @@
+[
+  {
+    "teamId": "3",
+    "name": "Richard Warren",
+    "photo": "https://randomuser.me/api/portraits/men/57.jpg",
+    "position": "Software Engineer",
+    "phone": "(896)-943-2660"
+  },
+  {
+    "teamId": "3",
+    "name": "Nathan Bennett",
+    "photo": "https://randomuser.me/api/portraits/men/96.jpg",
+    "position": "Scrum Master",
+    "phone": "(679)-671-9479"
+  },
+  {
+    "teamId": "3",
+    "name": "Alfredo Gilbert",
+    "photo": "https://randomuser.me/api/portraits/men/26.jpg",
+    "position": "UI/UX Designer",
+    "phone": "(162)-744-2059"
+  },
+  {
+    "teamId": "3",
+    "name": "Claire Brooks",
+    "photo": "https://randomuser.me/api/portraits/women/64.jpg",
+    "position": "Software Engineer",
+    "phone": "(519)-670-2531"
+  },
+  {
+    "teamId": "3",
+    "name": "Stacey Kennedy",
+    "photo": "https://randomuser.me/api/portraits/women/66.jpg",
+    "position": "Software Engineer",
+    "phone": "(114)-596-3391"
+  }
+]

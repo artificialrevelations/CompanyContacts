@@ -7,4 +7,5 @@ import android.arch.persistence.room.PrimaryKey
 @Entity(tableName = "teams")
 data class Team(
         @PrimaryKey @ColumnInfo(name = "team_id") var id: Long,
-        @ColumnInfo(name = "title") val name: String)
+        @ColumnInfo(name = "title") val name: String,
+        @ColumnInfo(name = "logo") val logo: String)

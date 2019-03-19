@@ -72,7 +72,7 @@ object Injection {
     }
 
     internal object Api {
-        private const val BASE_URL = "https://raw.githubusercontent.com/AlexZhukovich/CompanyContacts/master/"
+        private const val BASE_URL = "https://raw.githubusercontent.com/foobaz42/CompanyContacts/master/server-data/"
 
         private fun provideHttpClient(): OkHttpClient {
             return OkHttpClient()

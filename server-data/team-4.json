@@ -1,0 +1,37 @@
+[
+  {
+    "teamId": "4",
+    "name": "Frederick Dean",
+    "photo": "https://randomuser.me/api/portraits/men/72.jpg",
+    "position": "Software Engineer",
+    "phone": "(686)-378-9930"
+  },
+  {
+    "teamId": "4",
+    "name": "Harper Peters",
+    "photo": "https://randomuser.me/api/portraits/women/54.jpg",
+    "position": "Software Engineer",
+    "phone": "(182)-462-9947"
+  },
+  {
+    "teamId": "4",
+    "name": "Ella Castro",
+    "photo": "https://randomuser.me/api/portraits/women/93.jpg",
+    "position": "UI/UX Designer",
+    "phone": "(975)-810-9305"
+  },
+  {
+    "teamId": "4",
+    "name": "Jackie Hanson",
+    "photo": "https://randomuser.me/api/portraits/women/41.jpg",
+    "position": "Software Engineer",
+    "phone": "(289)-905-3824"
+  },
+  {
+    "teamId": "4",
+    "name": "Vicki Mitchell",
+    "photo": "https://randomuser.me/api/portraits/women/85.jpg",
+    "position": "Scrum Master",
+    "phone": "(831)-457-7284"
+  }
+]
