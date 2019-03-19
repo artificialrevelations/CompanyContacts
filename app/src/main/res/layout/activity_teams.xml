@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.alexzh.company.contacts.employees.EmployeesActivity">
+    tools:context="com.alexzh.company.contacts.teams.TeamsActivity">
 
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -12,7 +12,7 @@
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/employeesRecyclerView"
+            android:id="@+id/teamsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
