@@ -1,5 +1,6 @@
 package com.alexzh.company.contacts.data.source.local
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import com.alexzh.company.contacts.data.Employee
 import io.reactivex.Single
@@ -8,7 +9,10 @@ import io.reactivex.Single
 interface EmployeesDAO {
 
     @Query("SELECT * FROM employees WHERE team_id = :teamId")
-    fun getEmployeesByTeamId(teamId: Long): Single<List<Employee>>
+    fun getEmployeesByTeamIdRx(teamId: Long): Single<List<Employee>>
+
+    @Query("SELECT * FROM employees WHERE team_id = :teamId")
+    fun getEmployeesByTeamIdLD(teamId: Long): LiveData<List<Employee>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertEmployee(employee: Employee)

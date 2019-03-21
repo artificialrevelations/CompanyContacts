@@ -1,5 +1,6 @@
 package com.alexzh.company.contacts.data.source.local
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.*
 import com.alexzh.company.contacts.data.Team
 import io.reactivex.Single
@@ -8,7 +9,10 @@ import io.reactivex.Single
 interface TeamsDAO {
 
     @Query("SELECT * FROM teams")
-    fun getTeams(): Single<List<Team>>
+    fun getTeamsRx(): Single<List<Team>>
+
+    @Query("SELECT * FROM teams")
+    fun getTeamsLD(): LiveData<List<Team>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTeam(team: Team)

@@ -1,5 +1,6 @@
 package com.alexzh.company.contacts.teams
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 import com.alexzh.company.contacts.SchedulersProvider
 import com.alexzh.company.contacts.data.Team
@@ -9,9 +10,13 @@ import io.reactivex.Single
 class TeamsViewModel(private val teamRepository: TeamRepository,
                      private val schedulersProvider: SchedulersProvider): ViewModel() {
 
-    fun fetchTeams(): Single<List<Team>> {
-        return teamRepository.fetchTeams()
+    fun fetchTeamsRx(): Single<List<Team>> {
+        return teamRepository.fetchTeamsRx()
                 .subscribeOn(schedulersProvider.io())
                 .observeOn(schedulersProvider.ui())
+    }
+
+    fun fetchTeamsLD(): LiveData<List<Team>> {
+        return teamRepository.fetchTeamsLD()
     }
 }

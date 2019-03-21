@@ -1,5 +1,6 @@
 package com.alexzh.company.contacts.employees
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
@@ -15,23 +16,21 @@ import com.alexzh.company.contacts.R
 import com.alexzh.company.contacts.ViewModelFactory
 import com.alexzh.company.contacts.data.Employee
 import com.alexzh.company.contacts.data.Team
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_employees.*
 
-class EmployeesActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
+class EmployeesLDActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
         const val TEAM_ID = "team_id"
         const val DEFAULT_TEAM_ID = 0L
 
         fun start(context: Context, team: Team) {
-            val intent = Intent(context, EmployeesActivity::class.java)
-            intent.putExtra(EmployeesActivity.TEAM_ID, team.id)
+            val intent = Intent(context, EmployeesLDActivity::class.java)
+            intent.putExtra(EmployeesLDActivity.TEAM_ID, team.id)
             context.startActivity(intent)
         }
     }
 
-    private val disposable = CompositeDisposable()
     private lateinit var viewModel: EmployeesViewModel
     private val employeesAdapter: EmployeesAdapter by lazy { EmployeesAdapter(itemClick = { showDetails(it) }) }
 
@@ -75,26 +74,17 @@ class EmployeesActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     }
 
     private fun refreshEmployeesByTeamId(teamId: Long) {
-        disposable.add(
-                viewModel.fetchEmployeesById(teamId)
-                        .subscribe(::showEmployees, ::showError)
-        )
+        viewModel.fetchEmployeesByIdLD(teamId)
+                .observe(this, employeesObserver)
         swipeRefresh.isRefreshing = true
+    }
+
+    private val employeesObserver = Observer<List<Employee>> {
+        it?.also { showEmployees(it) }
     }
 
     private fun showEmployees(employees: List<Employee>) {
         employeesAdapter.setEmployeeList(employees)
         swipeRefresh.isRefreshing = false
-    }
-
-    private fun showError(error: Throwable) {
-        error.printStackTrace()
-        Toast.makeText(this, getString(R.string.error_message, error.cause), Toast.LENGTH_LONG).show()
-        swipeRefresh.isRefreshing = false
-    }
-
-    override fun onStop() {
-        super.onStop()
-        disposable.dispose()
     }
 }

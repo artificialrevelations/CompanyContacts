@@ -1,5 +1,6 @@
 package com.alexzh.company.contacts.teams
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
@@ -12,15 +13,13 @@ import com.alexzh.company.contacts.Injection
 import com.alexzh.company.contacts.R
 import com.alexzh.company.contacts.ViewModelFactory
 import com.alexzh.company.contacts.data.Team
-import com.alexzh.company.contacts.employees.EmployeesActivity
-import io.reactivex.disposables.CompositeDisposable
+import com.alexzh.company.contacts.employees.EmployeesLDActivity
 import kotlinx.android.synthetic.main.activity_teams.*
 
-class TeamsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
+class TeamsLDActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     private lateinit var viewModel: TeamsViewModel
-    private val disposable = CompositeDisposable()
     private val teamsAdapter: TeamsAdapter by lazy {
-        TeamsAdapter(itemClick = { EmployeesActivity.start(this, it)})
+        TeamsAdapter(itemClick = { EmployeesLDActivity.start(this, it) })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,26 +58,17 @@ class TeamsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener 
     }
 
     private fun refreshTeams() {
-        disposable.add(
-                viewModel.fetchTeams()
-                        .subscribe(::showTeams, ::showError)
-        )
+        viewModel.fetchTeamsLD()
+                .observe(this, teamsObserver)
         swipeRefresh.isRefreshing = true
+    }
+
+    private val teamsObserver = Observer<List<Team>> {
+        it?.also { showTeams(it) }
     }
 
     private fun showTeams(teams: List<Team>) {
         teamsAdapter.setTeamList(teams)
         swipeRefresh.isRefreshing = false
-    }
-
-    private fun showError(error: Throwable) {
-        error.printStackTrace()
-        Toast.makeText(this, getString(R.string.error_message, error.cause), Toast.LENGTH_LONG).show()
-        swipeRefresh.isRefreshing = false
-    }
-
-    override fun onStop() {
-        disposable.dispose()
-        super.onStop()
     }
 }
