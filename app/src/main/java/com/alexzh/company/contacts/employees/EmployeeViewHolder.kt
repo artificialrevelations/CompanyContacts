@@ -1,7 +1,7 @@
 package com.alexzh.company.contacts.employees
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import com.alexzh.company.contacts.data.Employee
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions

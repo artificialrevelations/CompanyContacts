@@ -1,6 +1,6 @@
 package com.alexzh.company.contacts.teams
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import com.alexzh.company.contacts.SchedulersProvider
 import com.alexzh.company.contacts.data.Team
 import com.alexzh.company.contacts.data.source.TeamRepository

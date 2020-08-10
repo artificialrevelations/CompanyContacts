@@ -1,7 +1,8 @@
 package com.alexzh.company.contacts.data.source.local
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import com.alexzh.company.contacts.data.Team
+import io.reactivex.Completable
 import io.reactivex.Single
 
 @Dao
@@ -11,7 +12,7 @@ interface TeamsDAO {
     fun getTeams(): Single<List<Team>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertTeam(team: Team)
+    fun insertTeam(team: Team): Completable
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTeams(teams: List<Team>)
