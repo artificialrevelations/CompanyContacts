@@ -1,48 +1,49 @@
 package com.alexzh.company.contacts.employees
 
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.alexzh.company.contacts.Injection
 import com.alexzh.company.contacts.R
 import com.alexzh.company.contacts.ViewModelFactory
+import com.alexzh.company.contacts.common.Logger
 import com.alexzh.company.contacts.data.Employee
 import com.alexzh.company.contacts.data.Team
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_employees.*
 
 class EmployeesActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
-
     companion object {
         const val TEAM_ID = "team_id"
         const val DEFAULT_TEAM_ID = 0L
+        const val LOG_TAG = "EmployeesActivity"
 
         fun start(context: Context, team: Team) {
             val intent = Intent(context, EmployeesActivity::class.java)
-            intent.putExtra(EmployeesActivity.TEAM_ID, team.id)
+            intent.putExtra(TEAM_ID, team.id)
             context.startActivity(intent)
         }
     }
 
+    private lateinit var logger: Logger
+    private val viewModel by lazy {
+        ViewModelProvider(this, ViewModelFactory(Injection.Employees.provideEmployeesViewModel(applicationContext)))
+                .get(EmployeesViewModel::class.java)
+    }
     private val disposable = CompositeDisposable()
-    private lateinit var viewModel: EmployeesViewModel
-    private val employeesAdapter: EmployeesAdapter by lazy { EmployeesAdapter(itemClick = { showDetails(it) }) }
+    private val employeesAdapter by lazy { EmployeesAdapter(itemClick = { showDetails(it) }) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_employees)
-
-        viewModel = ViewModelProviders
-                .of(this, ViewModelFactory(Injection.Employees.provideEmployeesViewModel(applicationContext)))
-                .get(EmployeesViewModel::class.java)
-
+        logger = Logger(this.lifecycle, LOG_TAG)
         employeesRecyclerView.layoutManager = LinearLayoutManager(this)
         employeesRecyclerView.adapter = employeesAdapter
         swipeRefresh.setOnRefreshListener(this)

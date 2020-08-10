@@ -1,35 +1,39 @@
 package com.alexzh.company.contacts.teams
 
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.alexzh.company.contacts.Injection
 import com.alexzh.company.contacts.R
 import com.alexzh.company.contacts.ViewModelFactory
+import com.alexzh.company.contacts.common.Logger
 import com.alexzh.company.contacts.data.Team
 import com.alexzh.company.contacts.employees.EmployeesActivity
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_teams.*
 
 class TeamsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
-    private lateinit var viewModel: TeamsViewModel
-    private val disposable = CompositeDisposable()
-    private val teamsAdapter: TeamsAdapter by lazy {
-        TeamsAdapter(itemClick = { EmployeesActivity.start(this, it)})
+    companion object {
+        private const val LOG_TAG = "TeamsActivity"
     }
+
+    private lateinit var logger: Logger
+    private val viewModel by lazy {
+        ViewModelProvider(this, ViewModelFactory(Injection.Teams.provideTeamsViewModel(applicationContext)))
+            .get(TeamsViewModel::class.java)
+    }
+    private val disposable = CompositeDisposable()
+    private val teamsAdapter by lazy { TeamsAdapter(itemClick = { EmployeesActivity.start(this, it)}) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_teams)
-
-        viewModel = ViewModelProviders
-                .of(this, ViewModelFactory(Injection.Teams.provideTeamsViewModel(applicationContext)))
-                .get(TeamsViewModel::class.java)
+        logger = Logger(this.lifecycle, LOG_TAG)
 
         teamsRecyclerView.layoutManager = LinearLayoutManager(this)
         teamsRecyclerView.adapter = teamsAdapter

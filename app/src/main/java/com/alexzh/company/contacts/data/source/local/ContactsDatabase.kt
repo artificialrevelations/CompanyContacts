@@ -1,9 +1,10 @@
 package com.alexzh.company.contacts.data.source.local
 
-import android.arch.persistence.room.Database
-import android.arch.persistence.room.Room
-import android.arch.persistence.room.RoomDatabase
 import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.alexzh.company.contacts.data.Employee
 import com.alexzh.company.contacts.data.Team
 
@@ -27,9 +28,20 @@ abstract class ContactsDatabase: RoomDatabase() {
                             context.applicationContext,
                             ContactsDatabase::class.java,
                             DATABASE_NAME)
+                            .addCallback(DB_CALLBACK)
                             .build()
                 }
                 return INSTANCE!!
+            }
+        }
+
+        private val DB_CALLBACK = object : RoomDatabase.Callback() {
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                super.onCreate(db)
+                db.execSQL("CREATE TABLE IF NOT EXISTS wordcount(" +
+                        "  word TEXT PRIMARY KEY," +
+                        "  cnt INTEGER" +
+                        ") WITHOUT ROWID;")
             }
         }
     }
