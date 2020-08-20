@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -14,9 +15,9 @@ import com.alexzh.company.contacts.Injection
 import com.alexzh.company.contacts.R
 import com.alexzh.company.contacts.ViewModelFactory
 import com.alexzh.company.contacts.common.Logger
+import com.alexzh.company.contacts.common.UiState
 import com.alexzh.company.contacts.data.Employee
 import com.alexzh.company.contacts.data.Team
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_employees.*
 
 class EmployeesActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
@@ -37,7 +38,7 @@ class EmployeesActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         ViewModelProvider(this, ViewModelFactory(Injection.Employees.provideEmployeesViewModel(applicationContext)))
                 .get(EmployeesViewModel::class.java)
     }
-    private val disposable = CompositeDisposable()
+
     private val employeesAdapter by lazy { EmployeesAdapter(itemClick = { showDetails(it) }) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +49,20 @@ class EmployeesActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         employeesRecyclerView.adapter = employeesAdapter
         swipeRefresh.setOnRefreshListener(this)
 
+        viewModel.employee.observe(this, Observer { handleEmployees(it) })
         refreshEmployeesByTeamId(intent.getLongExtra(TEAM_ID, DEFAULT_TEAM_ID))
+    }
+
+    private fun handleEmployees(state: UiState<List<Employee>>) {
+        if (state.isLoading) {
+            swipeRefresh.isRefreshing = true
+        }
+        if (state.data != null) {
+            showEmployees(state.data)
+        }
+        if (state.error != null) {
+            showError(state.error)
+        }
     }
 
     private fun showDetails(employee: Employee) {
@@ -76,11 +90,7 @@ class EmployeesActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
     }
 
     private fun refreshEmployeesByTeamId(teamId: Long) {
-        disposable.add(
-                viewModel.fetchEmployeesById(teamId)
-                        .subscribe(::showEmployees, ::showError)
-        )
-        swipeRefresh.isRefreshing = true
+        viewModel.loadEmployees(teamId)
     }
 
     private fun showEmployees(employees: List<Employee>) {
@@ -92,10 +102,5 @@ class EmployeesActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListe
         error.printStackTrace()
         Toast.makeText(this, getString(R.string.error_message, error.cause), Toast.LENGTH_LONG).show()
         swipeRefresh.isRefreshing = false
-    }
-
-    override fun onStop() {
-        super.onStop()
-        disposable.dispose()
     }
 }

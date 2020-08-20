@@ -10,18 +10,14 @@ import com.alexzh.company.contacts.data.source.remote.RemoteEmployeeDataSource
 import com.alexzh.company.contacts.data.source.remote.RemoteTeamDataSource
 import com.alexzh.company.contacts.employees.EmployeesViewModel
 import com.alexzh.company.contacts.teams.TeamsViewModel
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 object Injection {
 
     internal object App {
-        fun provideAppSchedulersProvider(): SchedulersProvider {
-            return AppSchedulersProvider()
-        }
-
         fun provideDatabase(context: Context): ContactsDatabase {
             return ContactsDatabase.getInstance(context)
         }
@@ -29,13 +25,13 @@ object Injection {
 
     internal object Teams {
         fun provideTeamsViewModel(context: Context): TeamsViewModel {
-            return TeamsViewModel(Data.provideTeamDataRepository(context), App.provideAppSchedulersProvider())
+            return TeamsViewModel(Data.provideTeamDataRepository(context))
         }
     }
 
     internal object Employees {
         fun provideEmployeesViewModel(context: Context): EmployeesViewModel {
-            return EmployeesViewModel(Data.provideEmployeeDataRepository(context), App.provideAppSchedulersProvider())
+            return EmployeesViewModel(Data.provideEmployeeDataRepository(context))
         }
     }
 
@@ -82,7 +78,7 @@ object Injection {
             return Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .addCallAdapterFactory(CoroutineCallAdapterFactory.invoke())
                     .client(httpClient)
                     .build()
         }

@@ -2,16 +2,18 @@ package com.alexzh.company.contacts.data.source.remote
 
 import com.alexzh.company.contacts.data.Employee
 import com.alexzh.company.contacts.data.source.EmployeeDataSource
-import io.reactivex.Completable
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class RemoteEmployeeDataSource(private val apiService: ContactsApiService): EmployeeDataSource {
 
-    override fun fetchEmployeesByTeamId(teamId: Long): Single<List<Employee>> {
-        return apiService.fetchEmployeesByTeamId(teamId)
+    override suspend fun fetchEmployeesByTeamId(teamId: Long): Flow<List<Employee>> {
+        return flow {
+            emit(apiService.fetchEmployeesByTeamId(teamId))
+        }
     }
 
-    override fun saveEmployees(employees: List<Employee>): Completable {
+    override suspend fun saveEmployees(employees: List<Employee>) {
         throw UnsupportedOperationException()
     }
 }
