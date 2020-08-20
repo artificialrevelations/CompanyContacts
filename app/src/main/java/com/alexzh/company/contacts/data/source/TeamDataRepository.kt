@@ -1,28 +1,40 @@
 package com.alexzh.company.contacts.data.source
 
 import com.alexzh.company.contacts.data.Team
-import io.reactivex.Completable
-import io.reactivex.Single
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
 
 class TeamDataRepository(private val localDataSource: TeamDataSource,
                          private val remoteDataSource: TeamDataSource): TeamRepository {
 
-    override fun fetchTeams(): Single<List<Team>> {
-        return Single.concat(fetchLocalTeams(), fetchAndCacheRemoteTeams())
-                .filter { teams -> teams.isNotEmpty() }
-                .first(listOf())
+    override suspend fun fetchTeams(): Flow<List<Team>> {
+        val localData = fetchLocalTeams()
+        return fetchLocalTeams()
+                .flatMapLatest {
+                    if (it.isEmpty()) {
+                        fetchAndCacheRemoteTeams()
+                    } else {
+                        localData
+                    }
+                }
     }
 
-    override fun saveTeams(teams: List<Team>): Completable {
+    override suspend fun saveTeams(teams: List<Team>) {
         return localDataSource.saveTeams(teams)
     }
 
-    private fun fetchLocalTeams(): Single<List<Team>> {
+    private suspend fun fetchLocalTeams(): Flow<List<Team>> {
         return localDataSource.fetchTeams()
     }
 
-    private fun fetchAndCacheRemoteTeams(): Single<List<Team>> {
+    private suspend fun fetchAndCacheRemoteTeams(): Flow<List<Team>> {
         return remoteDataSource.fetchTeams()
-                .doOnSuccess { saveTeams(it) }
+                .onEach {
+                    saveTeams(it)
+                }
+                .flowOn(Dispatchers.IO)
     }
 }

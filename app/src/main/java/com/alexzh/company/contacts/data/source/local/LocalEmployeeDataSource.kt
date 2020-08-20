@@ -2,18 +2,15 @@ package com.alexzh.company.contacts.data.source.local
 
 import com.alexzh.company.contacts.data.Employee
 import com.alexzh.company.contacts.data.source.EmployeeDataSource
-import io.reactivex.Completable
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 
 class LocalEmployeeDataSource(private val database: ContactsDatabase): EmployeeDataSource{
 
-    override fun fetchEmployeesByTeamId(teamId: Long): Single<List<Employee>> {
+    override suspend fun fetchEmployeesByTeamId(teamId: Long): Flow<List<Employee>> {
         return database.employeesDao().getEmployeesByTeamId(teamId)
     }
 
-    override fun saveEmployees(employees: List<Employee>): Completable {
+    override suspend fun saveEmployees(employees: List<Employee>) {
         database.employeesDao().insertEmployees(employees)
-        return Completable.complete()
     }
-
 }

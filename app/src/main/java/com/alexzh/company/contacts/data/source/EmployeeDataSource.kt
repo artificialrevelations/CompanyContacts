@@ -1,12 +1,11 @@
 package com.alexzh.company.contacts.data.source
 
 import com.alexzh.company.contacts.data.Employee
-import io.reactivex.Completable
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 
 interface EmployeeDataSource {
 
-    fun fetchEmployeesByTeamId(teamId: Long): Single<List<Employee>>
+    suspend fun fetchEmployeesByTeamId(teamId: Long): Flow<List<Employee>>
 
-    fun saveEmployees(employees: List<Employee>): Completable
+    suspend fun saveEmployees(employees: List<Employee>)
 }

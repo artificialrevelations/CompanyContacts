@@ -1,17 +1,19 @@
 package com.alexzh.company.contacts.teams
 
 import androidx.lifecycle.ViewModel
-import com.alexzh.company.contacts.SchedulersProvider
+import androidx.lifecycle.asLiveData
 import com.alexzh.company.contacts.data.Team
 import com.alexzh.company.contacts.data.source.TeamRepository
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 
-class TeamsViewModel(private val teamRepository: TeamRepository,
-                     private val schedulersProvider: SchedulersProvider): ViewModel() {
+class TeamsViewModel(
+        private val teamRepository: TeamRepository
+): ViewModel() {
 
-    fun fetchTeams(): Single<List<Team>> {
+    suspend fun fetchTeams(): Flow<List<Team>> {
+        (1..10).asFlow().asLiveData()
+
         return teamRepository.fetchTeams()
-                .subscribeOn(schedulersProvider.io())
-                .observeOn(schedulersProvider.ui())
     }
 }

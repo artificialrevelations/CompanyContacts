@@ -1,28 +1,38 @@
 package com.alexzh.company.contacts.data.source
 
 import com.alexzh.company.contacts.data.Employee
-import io.reactivex.Completable
-import io.reactivex.Single
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onEach
 
 class EmployeeDataRepository(private val localDataSource: EmployeeDataSource,
                              private val remoteDataSource: EmployeeDataSource): EmployeeRepository {
 
-    override fun saveEmployees(employees: List<Employee>): Completable {
+    override suspend fun saveEmployees(employees: List<Employee>) {
         return localDataSource.saveEmployees(employees)
     }
 
-    override fun fetchEmployeesByTeamId(teamId: Long): Single<List<Employee>> {
-        return Single.concat(fetchLocalEmployees(teamId), fetchAndCacheRemoteEmployees(teamId))
-                .filter { employees -> employees.isNotEmpty() }
-                .first(listOf())
+    override suspend fun fetchEmployeesByTeamId(teamId: Long): Flow<List<Employee>> {
+        val localData = fetchLocalEmployees(teamId)
+        return localData
+                .flatMapLatest {
+                    if (it.isEmpty()) {
+                        fetchAndCacheRemoteEmployees(teamId)
+                    } else {
+                        localData
+                    }
+                }
     }
 
-    private fun fetchLocalEmployees(teamId: Long): Single<List<Employee>> {
+    private suspend fun fetchLocalEmployees(teamId: Long): Flow<List<Employee>> {
         return localDataSource.fetchEmployeesByTeamId(teamId)
     }
 
-    private fun fetchAndCacheRemoteEmployees(teamId: Long): Single<List<Employee>> {
+    private suspend fun fetchAndCacheRemoteEmployees(teamId: Long): Flow<List<Employee>> {
         return remoteDataSource.fetchEmployeesByTeamId(teamId)
-                .doOnSuccess { saveEmployees(it) }
+                .onEach { saveEmployees(it) }
+                .flowOn(Dispatchers.IO)
     }
 }
