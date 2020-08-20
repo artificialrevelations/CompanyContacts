@@ -6,6 +6,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.alexzh.company.contacts.Injection
@@ -14,8 +15,9 @@ import com.alexzh.company.contacts.ViewModelFactory
 import com.alexzh.company.contacts.common.Logger
 import com.alexzh.company.contacts.data.Team
 import com.alexzh.company.contacts.employees.EmployeesActivity
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_teams.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class TeamsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener {
     companion object {
@@ -27,7 +29,6 @@ class TeamsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener 
         ViewModelProvider(this, ViewModelFactory(Injection.Teams.provideTeamsViewModel(applicationContext)))
             .get(TeamsViewModel::class.java)
     }
-    private val disposable = CompositeDisposable()
     private val teamsAdapter by lazy { TeamsAdapter(itemClick = { EmployeesActivity.start(this, it)}) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,10 +64,16 @@ class TeamsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener 
     }
 
     private fun refreshTeams() {
-        disposable.add(
-                viewModel.fetchTeams()
-                        .subscribe(::showTeams, ::showError)
-        )
+        lifecycleScope.launch {
+            viewModel.fetchTeams()
+                    .collect {
+                        try {
+                            showTeams(it)
+                        } catch (ex: Throwable) {
+                            showError(ex)
+                        }
+                    }
+        }
         swipeRefresh.isRefreshing = true
     }
 
@@ -79,10 +86,5 @@ class TeamsActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener 
         error.printStackTrace()
         Toast.makeText(this, getString(R.string.error_message, error.cause), Toast.LENGTH_LONG).show()
         swipeRefresh.isRefreshing = false
-    }
-
-    override fun onStop() {
-        disposable.dispose()
-        super.onStop()
     }
 }

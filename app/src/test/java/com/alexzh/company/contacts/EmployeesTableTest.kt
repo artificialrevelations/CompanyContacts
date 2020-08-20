@@ -6,7 +6,10 @@ import androidx.test.core.app.ApplicationProvider
 import com.alexzh.company.contacts.data.Employee
 import com.alexzh.company.contacts.data.Team
 import com.alexzh.company.contacts.data.source.local.ContactsDatabase
-import io.reactivex.Single
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -22,7 +25,7 @@ class EmployeesTableTest {
     }
 
     @Test
-    fun shouldAddEmployeeToDatabase() {
+    fun shouldAddEmployeeToDatabase() = runBlocking {
         val team = Team(
                 id = 1,
                 name = "Test team #1",
@@ -36,12 +39,13 @@ class EmployeesTableTest {
                 phone = "111-222-333"
         )
 
-        database.teamsDao().insertTeam(team).test()
-        database.employeesDao().insertEmployee(employee).test()
+        database.teamsDao().insertTeam(team)
+        database.employeesDao().insertEmployee(employee)
 
-        val employees: Single<List<Employee>> = database.employeesDao().getEmployeesByTeamId(team.id)
-
-        employees.test()
-            .assertValue(listOf(employee))
+        database.employeesDao().getEmployeesByTeamId(team.id)
+                .take(1)
+                .collect {
+                    assertEquals(listOf(employee), it)
+                }
     }
 }
